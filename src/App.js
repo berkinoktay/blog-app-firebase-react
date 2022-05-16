@@ -1,12 +1,13 @@
-import Header from './components/Header';
-import Main from './components/Main';
-import Footer from './components/Footer';
+import { Route, Routes } from 'react-router-dom';
+import Category from './pages/Category';
+import Home from './pages/Home';
 function App() {
   return (
     <>
-      <Header />
-      <Main />
-      <Footer />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/category/:categoryName" element={<Category />} />
+      </Routes>
     </>
   );
 }

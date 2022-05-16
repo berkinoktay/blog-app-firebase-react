@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BlogPost = () => {
+const BlogPostGrid = () => {
   return (
     <article className="group">
       <a href="#/">
@@ -18,7 +18,7 @@ const BlogPost = () => {
       </a>
 
       <div className="mt-4">
-        <h4 className="text-xl font-medium">
+        <h4 className="text-xl font-mediumAFEFE">
           <a href="#/" className="group-hover:text-red-500">
             Read This To Change How You Mind
           </a>
@@ -54,4 +54,4 @@ const BlogPost = () => {
   );
 };
 
-export default BlogPost;
+export default BlogPostGrid;
