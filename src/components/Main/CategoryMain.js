@@ -12,7 +12,7 @@ const CategoryMain = () => {
         <CategoryBanner />
         <BlogHeader title={'Son Gönderiler'} icon={<RiArticleLine />} />
         <div className="flex items-start">
-          <section className="flex flex-1 flex-col gap-x-7 gap-y-10">
+          <section className="flex flex-1 flex-col gap-y-6">
             <BlogPostHorizontal />
             <BlogPostHorizontal />
             <BlogPostHorizontal />

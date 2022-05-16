@@ -2,14 +2,14 @@ import React from 'react';
 
 const BlogPostGrid = () => {
   return (
-    <article className="group">
+    <article className="group bg-white rounded shadow">
       <a href="#/">
-        <div className="relative overflow-hidden rounded">
+        <div className="relative overflow-hidden">
           <div className="opacity-0 group-hover:opacity-50 absolute inset-0 w-full h-full bg-gray-900 z-10 transform transition-all ease-in duration-600 "></div>
           <img
             src="https://api.noudeveloper.com/uploads/thumb_19_af7ee7e31a.jpg"
             alt=""
-            className="overflow-hidden rounded group-hover:scale-110 object-cover transform ease-in duration-300"
+            className="group-hover:scale-110 object-cover transform ease-in duration-300"
           />
           <div className="absolute z-20 top-4 left-4 bg-white py-1 px-4 capitalize text-sm">
             Travel
@@ -17,7 +17,7 @@ const BlogPostGrid = () => {
         </div>
       </a>
 
-      <div className="mt-4">
+      <div className="px-4 py-6">
         <h4 className="text-xl font-mediumAFEFE">
           <a href="#/" className="group-hover:text-red-500">
             Read This To Change How You Mind

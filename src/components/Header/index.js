@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 const Header = ({ menu }) => {
   return (
-    <header className="w-full py-4 bg-white">
+    <header className="w-full py-4 bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center">
         <div className="logo">
           <Link to="/">

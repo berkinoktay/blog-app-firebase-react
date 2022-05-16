@@ -4,7 +4,7 @@ import menu from '../../db';
 const Category = () => {
   return (
     <div className="mt-8">
-      <div className="my-4 font-medium uppercase tracking-wider">
+      <div className="my-4 font-medium uppercase tracking-wider before:content-['•'] before:mr-2">
         KATEGORİLER
       </div>
       <ul>

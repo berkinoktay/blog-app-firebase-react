@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer components {
+  body {
+    background-color: #f8f8f8;
+  }
   footer svg * {
     fill: #fff;
   }
