@@ -25,7 +25,7 @@ const BlogPostHorizontal = () => {
           </a>
         </h4>
         <div className="my-3 text-xs text-gray-700 flex items-center ">
-          <span className='after:content-["-"] after:mx-2'>
+          <span className='after:content-["·"] after:mx-2'>
             Yazar: <strong>Berkin Oktay</strong>
           </span>
           <span>MAR 23, 2021</span>
