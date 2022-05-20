@@ -5,7 +5,7 @@ const Menu = ({ name }) => {
     <li>
       <Link
         to={`/${name.toLowerCase()}`}
-        className="py-4 px-5 hover:text-red-500 transform transition-colors duration-200"
+        className="py-4 px-5 text-black hover:text-red-500 transform transition-colors duration-200"
       >
         {name}
       </Link>

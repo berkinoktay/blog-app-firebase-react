@@ -6,7 +6,7 @@ const Search = () => {
   return (
     <div className="relative flex items-center">
       <input
-        className="outline-none border-b-2 bg-transparent border-gray-300 w-full py-2 pr-9"
+        className="outline-none border-b-2 bg-transparent border-gray-300 w-full py-2 pr-9 focus:border-gray-500 transform transition-all"
         type="text"
         placeholder="Yazı arayınız.."
         value={search}

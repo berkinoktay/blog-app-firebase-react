@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Logo from '../../assets/img/logo.png';
+import Logo from '../../assets/img/logo-black.png';
 
 import { FiFacebook, FiLinkedin, FiTwitter, FiGithub } from 'react-icons/fi';
 import Menu from './Menu';
@@ -9,14 +9,14 @@ import { Link } from 'react-router-dom';
 
 const Header = ({ menu }) => {
   return (
-    <header className="w-full py-4 bg-white shadow-md sticky top-0 z-50">
+    <header className="w-full py-2 bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center">
-        <div className="logo">
+        <div>
           <Link to="/">
             <img src={Logo} alt="Logo" className="max-w-full max-h-12" />
           </Link>
         </div>
-        <ul className="flex items-center uppercase tracking-widest text-sm mx-auto">
+        <ul className="flex items-center uppercase tracking-widest text-sm mx-auto my-0">
           {menu.map((item, index) => (
             <Menu key={index} name={item.name} />
           ))}

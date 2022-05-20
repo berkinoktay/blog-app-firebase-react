@@ -1,5 +1,8 @@
 @tailwind base;
 @tailwind components;
+.ant-menu-item.ant-menu-item-selected {
+  background-color: #ef4444 !important;
+}
 @tailwind utilities;
 
 @layer components {
@@ -11,5 +14,11 @@
   }
   footer .socials li:hover {
     color: #ddd;
+  }
+  .site-layout .site-layout-background {
+    background: #fff;
+  }
+  [data-theme='dark'] .site-layout .site-layout-background {
+    background: #141414;
   }
 }
