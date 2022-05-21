@@ -1,26 +1,30 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, message, Upload, Progress, Select } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { Form, Input, Button, message, Upload, Progress } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 
-import { slugify } from '../../constants';
 import { storage, db } from '../../firebase';
+import { slugify } from '../../constants/';
+import { useCategory } from '../../context/CategoryContext';
 
-const AddCategoryForm = ({ className }) => {
+const { TextArea } = Input;
+const { Option } = Select;
+
+const AddPostForm = () => {
   const [uploadFile, setUploadFile] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const [form] = Form.useForm();
-  const { TextArea } = Input;
-
+  const { categories } = useCategory();
   const onFinish = async (values) => {
+    console.log(values);
     setSubmitting(true);
     const imageRef = ref(
       storage,
-      `categoriesBanner/${uploadFile.uid}-${Date.now()}`
+      `postsCoverImages/${uploadFile.uid}-${Date.now()}`
     );
     const uploadImage = uploadBytesResumable(imageRef, uploadFile);
     uploadImage.on(
@@ -37,25 +41,25 @@ const AddCategoryForm = ({ className }) => {
       async () => {
         await getDownloadURL(uploadImage.snapshot.ref)
           .then((url) => {
-            addDoc(collection(db, 'categories'), {
-              categoryId: uuidv4(),
-              categoryName: values.name,
-              categorySlug: values.slug,
-              categoryDesc: values.aciklama || '',
+            addDoc(collection(db, 'posts'), {
+              postId: uuidv4(),
+              postName: values.title,
+              postSlug: values.slug,
+              postDesc: values.detail,
+              postCategoryID: values.categoryID,
               timestamp: serverTimestamp(),
-              categoryImage: url,
+              postImage: url,
             });
-          })
-          .then(() => {
-            form.resetFields();
             setSubmitting(false);
-            message.success('Kategori başarılı bir şekilde eklendi.');
+            form.resetFields();
+            message.success('Yazı başarılı bir şekilde eklendi.');
             setProgress(0);
           })
+
           .catch((err) => {
             setSubmitting(false);
             console.log(err);
-            message.error('Kategori eklenirken bir hata oluştu.');
+            message.error('Yazı eklenirken bir hata oluştu.');
           });
       }
     );
@@ -85,20 +89,19 @@ const AddCategoryForm = ({ className }) => {
       onFinish={onFinish}
       layout="vertical"
       form={form}
-      className={className}
     >
       <Form.Item
-        name="name"
-        label="Kategori İsmi"
+        name="title"
+        label="Yazı Başlığı"
         rules={[
           {
             required: true,
-            message: 'Lütfen kategori ismini giriniz.',
+            message: 'Lütfen yazı başlığını giriniz.',
           },
         ]}
       >
         <Input
-          placeholder="Kategori ismini giriniz.."
+          placeholder="Yazı başlığını giriniz.."
           showCount
           maxLength={75}
           onChange={categoryNameChange}
@@ -115,32 +118,66 @@ const AddCategoryForm = ({ className }) => {
         ]}
         extra={
           <span className="mt-5">
-            "Kısa İsim" kategori isminin URL versiyonudur. Genellikle tümü küçük
+            "Kısa İsim" yazı başlığının URL versiyonudur. Genellikle tümü küçük
             harflerden oluşur, sadece harf, rakam ve tire içerir.
           </span>
         }
       >
         <Input
-          placeholder="Kategori kısa ismi giriniz.."
+          placeholder="Yazı başlığının kısa ismini giriniz.."
           showCount
           maxLength={75}
         />
       </Form.Item>
-
-      <Form.Item name="aciklama" label="Açıklama">
+      <Form.Item
+        name="categoryID"
+        label="Kategori"
+        rules={[
+          {
+            required: true,
+            message: 'Kategori boş bırakılamaz!.',
+          },
+        ]}
+        extra={
+          <span className="mt-5">
+            Yazınızın yayınlanmasını istediğiniz kategori başlığını seçiniz..
+          </span>
+        }
+      >
+        <Select
+          showSearch
+          style={{ width: 200 }}
+          placeholder="Kategori seçiniz.."
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+          filterSort={(optionA, optionB) =>
+            optionA.children
+              .toLowerCase()
+              .localeCompare(optionB.children.toLowerCase())
+          }
+        >
+          {categories.map((category) => (
+            <Option key={category.categoryId} value={category.categoryId}>
+              {category.categoryName}
+            </Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item name="detail" label="Yazı Detayı">
         <TextArea
-          placeholder="Kategori açıklamasını giriniz.."
+          placeholder="Yazı detayını giriniz.."
           showCount
-          maxLength={300}
-          autoSize={{ minRows: 3, maxRows: 5 }}
+          autoSize={{ minRows: 15, maxRows: 50 }}
         />
       </Form.Item>
       <Form.Item
-        name="Kategori Resmi"
-        label="Kategori Resmi"
+        name="uploadedImage"
+        label="Öne Çıkarılacak Resim"
         valuePropName="fileList"
         getValueFromEvent={normFile}
-        extra="Kategori sayfasında gözükmesini istediğiniz resmi yüklemek için tıklayınız."
+        extra="Yazınızda öne çıkan resmi yüklemek için tıklayınız."
         rules={[
           {
             required: true,
@@ -179,4 +216,4 @@ const AddCategoryForm = ({ className }) => {
   );
 };
 
-export default AddCategoryForm;
+export default AddPostForm;

@@ -11,11 +11,12 @@ export const CategoryProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const qu = query(
+      const categoryQuery = query(
         collection(db, 'categories'),
         orderBy('timestamp', 'desc')
       );
-      onSnapshot(qu, (snapshot) => {
+
+      onSnapshot(categoryQuery, (snapshot) => {
         const categories = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
