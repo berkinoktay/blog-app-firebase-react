@@ -8,7 +8,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { slugify } from '../../constants';
 import { storage, db } from '../../firebase';
 
-const AddCategoryForm = () => {
+const AddCategoryForm = ({ className }) => {
   const [uploadFile, setUploadFile] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -20,10 +20,9 @@ const AddCategoryForm = () => {
     setSubmitting(true);
     const imageRef = ref(
       storage,
-      `categoriesBanner/${uploadFile.name}-${uploadFile.uid}`
+      `categoriesBanner/${uploadFile.uid}-${Date.now()}`
     );
     const uploadImage = uploadBytesResumable(imageRef, uploadFile);
-
     uploadImage.on(
       'state_changed',
       (snapshot) => {
@@ -45,6 +44,8 @@ const AddCategoryForm = () => {
               categoryDesc: values.aciklama || '',
               timestamp: serverTimestamp(),
               categoryImage: url,
+              uid: uploadFile.uid,
+              uploadedFileName: uploadFile.name,
             });
           })
           .then(() => {
@@ -86,7 +87,7 @@ const AddCategoryForm = () => {
       onFinish={onFinish}
       layout="vertical"
       form={form}
-      className="w-2/6"
+      className={className}
     >
       <Form.Item
         name="name"

@@ -6,15 +6,21 @@ const CategoryContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [isVisibleModal, setIsVisibleModal] = useState(false);
 
   useEffect(() => {
     try {
-      const q = query(
+      const qu = query(
         collection(db, 'categories'),
         orderBy('timestamp', 'desc')
       );
-      onSnapshot(q, (querySnapshot) => {
-        setCategories(querySnapshot.docs.map((category) => category.data()));
+      onSnapshot(qu, (snapshot) => {
+        const categories = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCategories(categories);
       });
     } catch (e) {
       console.error('Error getting documents: ', e);
@@ -24,6 +30,10 @@ export const CategoryProvider = ({ children }) => {
   const values = {
     categories,
     setCategories,
+    selectedCategory,
+    setSelectedCategory,
+    isVisibleModal,
+    setIsVisibleModal,
   };
   return (
     <CategoryContext.Provider value={values}>

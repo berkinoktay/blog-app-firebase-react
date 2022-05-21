@@ -1,16 +1,27 @@
-import React from 'react';
-import { Table, Skeleton, Space, Image } from 'antd';
+import React, { useState } from 'react';
+import { Table, Skeleton, Space, Image, Modal } from 'antd';
+import { deleteDoc, doc, getDoc } from 'firebase/firestore';
+
 import { useCategory } from '../../context/CategoryContext';
-
+import { db } from '../../firebase';
+import UpdateCategoryForm from './UpdateCategoryForm';
 const CategoriesTable = () => {
-  const { categories } = useCategory();
-
+  const { categories, setSelectedCategory, isVisibleModal, setIsVisibleModal } =
+    useCategory();
+  const deleteCategory = async (id) => {
+    await deleteDoc(doc(db, 'categories', id));
+  };
+  const handleUpdateCategory = async (id) => {
+    const veri = await getDoc(doc(db, 'categories', id));
+    setSelectedCategory({ ...veri.data(), id });
+    setIsVisibleModal(true);
+  };
   const columns = [
     {
       title: 'Kategori İsmi',
       dataIndex: 'categoryName',
       key: 'categoryName',
-      render: (text) => <span>{text}</span>,
+      render: (categoryName) => <span>{categoryName}</span>,
     },
 
     {
@@ -44,20 +55,32 @@ const CategoriesTable = () => {
     {
       title: 'İşlemler',
       key: 'islemler',
-      render: () => (
+      dataIndex: 'key',
+      render: (key) => (
         <Space size="middle">
-          <button className="text-green-700 font-semibold">Güncelle</button>
-          <button className="text-red-500 font-semibold">Sil</button>
+          <button
+            className="text-green-700 font-semibold"
+            onClick={() => handleUpdateCategory(key)}
+          >
+            Güncelle
+          </button>
+          <button
+            className="text-red-500 font-semibold"
+            onClick={() => deleteCategory(key)}
+          >
+            Sil
+          </button>
         </Space>
       ),
     },
   ];
   const data = categories.map((category) => {
     return {
-      key: category.categoryId,
+      key: category.id,
+      categoryId: category.categoryId,
       categoryName: category.categoryName,
       slug: category.categorySlug,
-      aciklama: category.categoryDesc,
+      aciklama: category.categoryDesc === '' ? '-' : category.categoryDesc,
       categoryImage: category.categoryImage,
     };
   });
@@ -73,8 +96,16 @@ const CategoriesTable = () => {
         onChange={onChange}
         pagination={{ pageSize: 5 }}
         className="flex-1"
-        loading={categories.length === 0}
       />
+      <Modal
+        title="Kategoriyi Düzenle"
+        visible={isVisibleModal}
+        onCancel={() => setIsVisibleModal(false)}
+        footer={null}
+        destroyOnClose={true}
+      >
+        <UpdateCategoryForm className={'w-full'} />
+      </Modal>
     </>
   );
 };

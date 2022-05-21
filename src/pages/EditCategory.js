@@ -6,7 +6,7 @@ import CategoriesTable from '../components/Panel/CategoriesTable';
 const EditCategory = () => {
   return (
     <div className="flex gap-10">
-      <AddCategoryForm />
+      <AddCategoryForm className={'w-2/6'} />
       <CategoriesTable />
     </div>
   );
