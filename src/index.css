@@ -1,14 +1,22 @@
 @tailwind base;
 @tailwind components;
+
 .ant-menu-item.ant-menu-item-selected {
   background-color: #ef4444 !important;
 }
 .ant-form-item-extra {
   margin: 0.5rem 0;
 }
+
+.ant-table-cell {
+  text-align: center;
+}
 @tailwind utilities;
 
 @layer components {
+  img {
+    display: inline;
+  }
   body {
     background-color: #f8f8f8;
   }

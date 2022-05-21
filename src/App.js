@@ -7,14 +7,14 @@ import AddPost from './components/Panel/AddPost';
 import AllPosts from './components/Panel/AllPosts';
 import EditPost from './components/Panel/EditPost';
 import EditCategory from './pages/EditCategory';
-// import Home from './pages/Home';
-// import Panel from './pages/Panel';
+import { CategoryProvider } from './context/CategoryContext';
+
 const Home = lazy(() => import('./pages/Home'));
 const Panel = lazy(() => import('./pages/Panel'));
 
 function App() {
   return (
-    <>
+    <CategoryProvider>
       <Suspense fallback={<p> Loading...</p>}>
         <Routes>
           <Route exact path="/" element={<Home />} />
@@ -64,7 +64,7 @@ function App() {
           <Route path="panel/*" element={<h1>eşleşmedi</h1>} />
         </Routes>
       </Suspense>
-    </>
+    </CategoryProvider>
   );
 }
 

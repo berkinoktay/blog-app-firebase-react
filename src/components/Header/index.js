@@ -6,8 +6,10 @@ import { FiFacebook, FiLinkedin, FiTwitter, FiGithub } from 'react-icons/fi';
 import Menu from './Menu';
 import Socials from '../Socials';
 import { Link } from 'react-router-dom';
+import { useCategory } from '../../context/CategoryContext';
 
-const Header = ({ menu }) => {
+const Header = () => {
+  const { categories } = useCategory();
   return (
     <header className="w-full py-2 bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center">
@@ -17,8 +19,12 @@ const Header = ({ menu }) => {
           </Link>
         </div>
         <ul className="flex items-center uppercase tracking-widest text-sm mx-auto my-0">
-          {menu.map((item, index) => (
-            <Menu key={index} name={item.name} />
+          {categories.map((item) => (
+            <Menu
+              key={item.categoryId}
+              name={item.categoryName}
+              slug={item.categorySlug}
+            />
           ))}
         </ul>
         <ul className="flex items-center">

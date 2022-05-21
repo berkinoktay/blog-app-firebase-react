@@ -3,11 +3,10 @@ import Header from '../components/Header';
 import Main from '../components/Main';
 import Footer from '../components/Footer';
 
-import menu from '../db';
 const Home = () => {
   return (
     <>
-      <Header menu={menu} />
+      <Header />
       <Main />
       <Footer />
     </>
