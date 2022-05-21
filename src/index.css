@@ -3,6 +3,9 @@
 .ant-menu-item.ant-menu-item-selected {
   background-color: #ef4444 !important;
 }
+.ant-form-item-extra {
+  margin: 0.5rem 0;
+}
 @tailwind utilities;
 
 @layer components {

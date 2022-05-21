@@ -6,7 +6,7 @@ import Category from './pages/Category';
 import AddPost from './components/Panel/AddPost';
 import AllPosts from './components/Panel/AllPosts';
 import EditPost from './components/Panel/EditPost';
-import EditCategory from './components/Panel/EditCategory';
+import EditCategory from './pages/EditCategory';
 // import Home from './pages/Home';
 // import Panel from './pages/Panel';
 const Home = lazy(() => import('./pages/Home'));

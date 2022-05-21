@@ -18,8 +18,8 @@ const BlogPostGrid = () => {
       </a>
 
       <div className="px-4 py-6">
-        <h4 className="text-xl font-mediumAFEFE">
-          <a href="#/" className="group-hover:text-red-500">
+        <h4 className="text-xl font-medium">
+          <a href="#/" className="group-hover:text-red-500 line-clamp-2">
             Read This To Change How You Mind
           </a>
         </h4>

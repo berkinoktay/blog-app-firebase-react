@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom';
 const BlogPostHorizontal = () => {
   const { categoryName } = useParams();
   return (
-    <article className="group rounded overflow-hidden w-full flex items-center bg-white shadow">
+    <article className="group rounded overflow-hidden w-full grid grid-cols-2 items-center bg-white shadow">
       <a href="#/">
         <div className="relative overflow-hidden">
           <div className="opacity-0 group-hover:opacity-50 absolute inset-0 w-full h-full bg-gray-900 z-10 transform transition-all ease-in duration-600 "></div>
           <img
             src="https://api.noudeveloper.com/uploads/thumb_19_af7ee7e31a.jpg"
             alt=""
-            className="max-w-sm group-hover:scale-110 object-cover transform ease-in duration-300"
+            className=" group-hover:scale-110 object-cover transform ease-in duration-300"
           />
         </div>
       </a>
@@ -19,8 +19,8 @@ const BlogPostHorizontal = () => {
         <div className="capitalize text-sm text-red-500 mb-3">
           {categoryName}
         </div>
-        <h4 className="text-xl font-mediumAFEFE">
-          <a href="#/" className="group-hover:text-red-500">
+        <h4 className="text-xl font-medium">
+          <a href="#/" className="group-hover:text-red-500 line-clamp-2">
             Read This To Change How You Mind
           </a>
         </h4>
