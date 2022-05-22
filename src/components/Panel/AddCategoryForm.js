@@ -100,7 +100,7 @@ const AddCategoryForm = ({ className }) => {
         <Input
           placeholder="Kategori ismini giriniz.."
           showCount
-          maxLength={75}
+          maxLength={20}
           onChange={categoryNameChange}
         />
       </Form.Item>
@@ -123,7 +123,7 @@ const AddCategoryForm = ({ className }) => {
         <Input
           placeholder="Kategori kısa ismi giriniz.."
           showCount
-          maxLength={75}
+          maxLength={20}
         />
       </Form.Item>
 

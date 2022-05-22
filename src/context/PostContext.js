@@ -13,7 +13,7 @@ export const PostsProvider = ({ children }) => {
     try {
       const postsQuery = query(
         collection(db, 'posts'),
-        orderBy('timestamp', 'desc')
+        orderBy('postCreatedTime', 'desc')
       );
 
       onSnapshot(postsQuery, (snapshot) => {

@@ -15,7 +15,7 @@ const UpdateCategoryForm = ({ className }) => {
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const { selectedCategory, setIsVisibleModal } = useCategory();
+  const { updatedCategory, setIsVisibleModal } = useCategory();
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
@@ -48,7 +48,7 @@ const UpdateCategoryForm = ({ className }) => {
                 uid: uploadFile.uid,
                 uploadedFileName: uploadFile.name,
               };
-              await updateDoc(doc(db, 'categories', selectedCategory.id), data);
+              await updateDoc(doc(db, 'categories', updatedCategory.id), data);
             })
             .then(async () => {
               setSubmitting(false);
@@ -73,7 +73,7 @@ const UpdateCategoryForm = ({ className }) => {
           categorySlug: values.slug,
           categoryDesc: values.aciklama || '',
         };
-        await updateDoc(doc(db, 'categories', selectedCategory.id), data);
+        await updateDoc(doc(db, 'categories', updatedCategory.id), data);
         setSubmitting(false);
         form.resetFields();
         message.success('Kategori başarılı bir şekilde eklendi.');
@@ -113,9 +113,9 @@ const UpdateCategoryForm = ({ className }) => {
       form={form}
       className={className}
       initialValues={{
-        name: selectedCategory.categoryName || '',
-        slug: selectedCategory.categorySlug || '',
-        aciklama: selectedCategory.categoryDesc || '',
+        name: updatedCategory.categoryName || '',
+        slug: updatedCategory.categorySlug || '',
+        aciklama: updatedCategory.categoryDesc || '',
       }}
     >
       <Form.Item
@@ -131,7 +131,7 @@ const UpdateCategoryForm = ({ className }) => {
         <Input
           placeholder="Kategori ismini giriniz.."
           showCount
-          maxLength={75}
+          maxLength={20}
           onChange={categoryNameChange}
         />
       </Form.Item>
@@ -154,7 +154,7 @@ const UpdateCategoryForm = ({ className }) => {
         <Input
           placeholder="Kategori kısa ismi giriniz.."
           showCount
-          maxLength={75}
+          maxLength={20}
         />
       </Form.Item>
 
@@ -186,20 +186,20 @@ const UpdateCategoryForm = ({ className }) => {
           beforeUpload={beforeUpload}
           //   fileList={[
           //     {
-          //       uid: selectedCategory.uid,
-          //       name: selectedCategory.uploadedFileName,
+          //       uid: updatedCategory.uid,
+          //       name: updatedCategory.uploadedFileName,
           //       status: 'done',
-          //       url: selectedCategory.categoryImage,
-          //       thumbUrl: `${selectedCategory.categoryImage}`,
+          //       url: updatedCategory.categoryImage,
+          //       thumbUrl: `${updatedCategory.categoryImage}`,
           //     },
           //   ]}
           //   defaultFileList={[
           //     {
-          //       uid: selectedCategory.uid,
-          //       name: selectedCategory.uploadedFileName,
+          //       uid: updatedCategory.uid,
+          //       name: updatedCategory.uploadedFileName,
           //       status: 'done',
-          //       url: selectedCategory.categoryImage,
-          //       thumbUrl: `${selectedCategory.categoryImage}`,
+          //       url: updatedCategory.categoryImage,
+          //       thumbUrl: `${updatedCategory.categoryImage}`,
           //     },
           //   ]}
         >

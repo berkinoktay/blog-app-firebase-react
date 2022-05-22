@@ -6,14 +6,14 @@ import { useCategory } from '../../context/CategoryContext';
 import { db } from '../../firebase';
 import UpdateCategoryForm from './UpdateCategoryForm';
 const CategoriesTable = () => {
-  const { categories, setSelectedCategory, isVisibleModal, setIsVisibleModal } =
+  const { categories, setUpdatedCategory, isVisibleModal, setIsVisibleModal } =
     useCategory();
   const deleteCategory = async (id) => {
     await deleteDoc(doc(db, 'categories', id));
   };
   const handleUpdateCategory = async (id) => {
     const veri = await getDoc(doc(db, 'categories', id));
-    setSelectedCategory({ ...veri.data(), id });
+    setUpdatedCategory({ ...veri.data(), id });
     setIsVisibleModal(true);
   };
   const columns = [
@@ -44,7 +44,7 @@ const CategoriesTable = () => {
             width={70}
             height={40}
             src={categoryImage}
-            className="rounded object-cover"
+            className="rounded object-cover shadow-sm"
             placeholder={
               <Skeleton.Button active={true} size="default" shape="square" />
             }

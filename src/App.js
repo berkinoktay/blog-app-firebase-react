@@ -20,8 +20,8 @@ function App() {
         <Suspense fallback={<p> Loading...</p>}>
           <Routes>
             <Route exact path="/" element={<Home />} />
-            <Route path=":categoryName" element={<Category />}></Route>
-            <Route path=":categoryName/:slug" element={<PostDetail />} />
+            <Route path=":categorySlug" element={<Category />}></Route>
+            <Route path=":categorySlug/:postSlug" element={<PostDetail />} />
             <Route
               exact
               path="panel"

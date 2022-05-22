@@ -3,7 +3,14 @@ import { Form, Input, Button, message, Upload, Progress, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+} from 'firebase/firestore';
 
 import { storage, db } from '../../firebase';
 import { slugify } from '../../constants/';
@@ -16,12 +23,20 @@ const AddPostForm = () => {
   const [uploadFile, setUploadFile] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
-
+  const [categoryDetail, setCategoryDetail] = useState({});
   const [form] = Form.useForm();
   const { categories } = useCategory();
   const onFinish = async (values) => {
-    console.log(values);
+    let categoryDetail = {};
     setSubmitting(true);
+    const getCategoryDetails = query(
+      collection(db, 'categories'),
+      where('categoryId', '==', values.categoryID)
+    );
+    const querySnapshot = await getDocs(getCategoryDetails);
+    querySnapshot.forEach((doc) => {
+      categoryDetail = { ...doc.data() };
+    });
     const imageRef = ref(
       storage,
       `postsCoverImages/${uploadFile.uid}-${Date.now()}`
@@ -41,14 +56,16 @@ const AddPostForm = () => {
       async () => {
         await getDownloadURL(uploadImage.snapshot.ref)
           .then((url) => {
+            const categoryName = categoryDetail.categoryName;
             addDoc(collection(db, 'posts'), {
               postId: uuidv4(),
               postName: values.title,
               postSlug: values.slug,
               postDesc: values.detail,
-              postCategoryID: values.categoryID,
-              timestamp: serverTimestamp(),
               postImage: url,
+              postCreatedTime: serverTimestamp(),
+              postCategoryID: values.categoryID,
+              postCategoryName: categoryName,
             });
             setSubmitting(false);
             form.resetFields();
@@ -209,7 +226,7 @@ const AddPostForm = () => {
 
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={submitting}>
-          Kategori Ekle
+          Yazı Ekle
         </Button>
       </Form.Item>
     </Form>

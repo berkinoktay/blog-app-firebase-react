@@ -6,7 +6,8 @@ const CategoryContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [updatedCategory, setUpdatedCategory] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
 
   useEffect(() => {
@@ -31,10 +32,12 @@ export const CategoryProvider = ({ children }) => {
   const values = {
     categories,
     setCategories,
-    selectedCategory,
-    setSelectedCategory,
+    updatedCategory,
+    setUpdatedCategory,
     isVisibleModal,
     setIsVisibleModal,
+    selectedCategory,
+    setSelectedCategory,
   };
   return (
     <CategoryContext.Provider value={values}>
