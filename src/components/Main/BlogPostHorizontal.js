@@ -27,13 +27,13 @@ const BlogPostHorizontal = ({
       </a>
 
       <div className="px-10">
-        <div className="capitalize text-sm text-red-500 mb-3">
+        <div className="capitalize text-sm text-red-500 mb-3 text-black">
           {postCategoryName}
         </div>
         <h4 className="text-xl font-medium">
           <a
             href={`/${categorySlug}/${postSlug}`}
-            className="group-hover:text-red-500 line-clamp-2"
+            className="group-hover:text-red-500 line-clamp-2 text-black"
           >
             {postName}
           </a>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { updateDoc, doc, getDoc } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore';
 import { Form, Input, Button, message, Upload, Progress } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -20,7 +20,7 @@ const UpdateCategoryForm = ({ className }) => {
 
   const onFinish = async (values) => {
     setSubmitting(true);
-    if (uploadFile !== null) {
+    if (Object.keys(uploadFile).length > 0) {
       const imageRef = ref(
         storage,
         `categoriesBanner/${uploadFile.uid}-${Date.now()}`

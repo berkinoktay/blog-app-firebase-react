@@ -53,7 +53,7 @@ const CategoryMain = () => {
                 ))
               : ''}
           </section>
-          <Sidebar />
+          <Sidebar desc={data.category.categoryDesc} />
         </div>
       </div>
     </main>

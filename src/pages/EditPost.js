@@ -15,6 +15,7 @@ const EditPost = () => {
             img={post.postImage}
             title={post.postName}
             desc={post.postDesc}
+            firebaseID={post.firebaseID}
           />
         ))
       ) : (

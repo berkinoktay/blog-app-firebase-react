@@ -32,7 +32,10 @@ const DetailSection = () => {
           <section className="flex flex-1 flex-col bg-white rounded shadow">
             <div className="p-7">
               <div className="flex items-center capitalize text-sm mb-3">
-                <Link to="/">Anasayfa</Link> <MdKeyboardArrowRight />
+                <Link to="/" className="text-black">
+                  Anasayfa
+                </Link>{' '}
+                <MdKeyboardArrowRight />
                 <span className="text-red-500"> {data.postCategoryName}</span>
               </div>
               <h1 className="font-semibold text-3xl">{data.postName}</h1>

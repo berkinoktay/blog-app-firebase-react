@@ -24,7 +24,7 @@ const BlogPostGrid = ({
             effect="blur"
           />
 
-          <div className="absolute z-20 top-4 left-4 bg-white py-1 px-4 capitalize text-sm shadow rounded">
+          <div className="absolute z-20 top-4 left-4 bg-white py-1 px-4 capitalize text-sm shadow rounded text-black">
             {postCategoryName}
           </div>
         </div>
@@ -34,7 +34,7 @@ const BlogPostGrid = ({
         <h4 className="text-xl font-medium">
           <a
             href={`/${slugify(postCategoryName)}/${postSlug}`}
-            className="group-hover:text-red-500 line-clamp-2"
+            className="group-hover:text-red-500 line-clamp-2 text-black"
           >
             {postName}
           </a>

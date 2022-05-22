@@ -1,31 +1,34 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Upload, Progress, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import {
   collection,
-  addDoc,
-  serverTimestamp,
   query,
   where,
   getDocs,
+  updateDoc,
+  doc,
 } from 'firebase/firestore';
 
 import { storage, db } from '../../firebase';
-import { slugify } from '../../constants/';
+import { slugify } from '../../constants';
 import { useCategory } from '../../context/CategoryContext';
 
 const { TextArea } = Input;
 const { Option } = Select;
-
-const AddPostForm = () => {
+const UpdatePostForm = ({ updatedPost, setIsVisibleModal }) => {
+  console.log(updatedPost);
   const [uploadFile, setUploadFile] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
+
   const [form] = Form.useForm();
   const { categories } = useCategory();
+
   const onFinish = async (values) => {
+    console.log(uploadFile);
+
     let categoryDetail = {};
     setSubmitting(true);
     const getCategoryDetails = query(
@@ -36,51 +39,75 @@ const AddPostForm = () => {
     querySnapshot.forEach((doc) => {
       categoryDetail = { ...doc.data() };
     });
-    const imageRef = ref(
-      storage,
-      `postsCoverImages/${uploadFile.uid}-${Date.now()}`
-    );
-    const uploadImage = uploadBytesResumable(imageRef, uploadFile);
-    uploadImage.on(
-      'state_changed',
-      (snapshot) => {
-        const progressPercent = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        setProgress(progressPercent);
-      },
-      (err) => {
-        console.log(err);
-      },
-      async () => {
-        await getDownloadURL(uploadImage.snapshot.ref)
-          .then((url) => {
-            const categoryName = categoryDetail.categoryName;
-            addDoc(collection(db, 'posts'), {
-              postId: uuidv4(),
-              postName: values.title,
-              postSlug: values.slug,
-              postDesc: values.detail,
-              postImage: url,
-              postCreatedTime: serverTimestamp(),
-              postCategoryID: values.categoryID,
-              postCategoryName: categoryName,
+
+    if (Object.keys(uploadFile).length > 0) {
+      const imageRef = ref(
+        storage,
+        `postsCoverImages/${uploadFile.uid}-${Date.now()}`
+      );
+      const uploadImage = uploadBytesResumable(imageRef, uploadFile);
+      uploadImage.on(
+        'state_changed',
+        (snapshot) => {
+          const progressPercent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(progressPercent);
+        },
+        (err) => {
+          console.log(err);
+        },
+        async () => {
+          await getDownloadURL(uploadImage.snapshot.ref)
+            .then(async (url) => {
+              //   const categoryName = categoryDetail.categoryName;
+              const data = {
+                postName: values.title,
+                postSlug: values.slug,
+                postDesc: values.detail,
+                postImage: url,
+                postCategoryID: values.categoryID,
+                postCategoryName: categoryDetail.categoryName,
+              };
+              await updateDoc(doc(db, 'posts', updatedPost.firebaseID), data);
+            })
+            .then(() => {
+              setSubmitting(false);
+              form.resetFields();
+              setIsVisibleModal(false);
+              message.success('Yazı başarılı bir şekilde güncellendi.');
+              setProgress(0);
+            })
+
+            .catch((err) => {
+              setSubmitting(false);
+              console.log(err);
+              message.error('Yazı güncellenirken bir hata oluştu.');
             });
-            setSubmitting(false);
-            form.resetFields();
-            message.success('Yazı başarılı bir şekilde eklendi.');
-            setProgress(0);
-          })
-
-          .catch((err) => {
-            setSubmitting(false);
-            console.log(err);
-            message.error('Yazı eklenirken bir hata oluştu.');
-          });
+        }
+      );
+    } else {
+      try {
+        const data = {
+          postName: values.title,
+          postSlug: values.slug,
+          postDesc: values.detail,
+          postCategoryID: values.categoryID,
+          postCategoryName: categoryDetail.categoryName,
+          postImage: updatedPost.postImage,
+        };
+        await updateDoc(doc(db, 'posts', updatedPost.firebaseID), data);
+        setSubmitting(false);
+        form.resetFields();
+        setIsVisibleModal(false);
+        message.success('Yazı başarılı bir şekilde güncellendi.');
+      } catch (err) {
+        setSubmitting(false);
+        console.log(err);
+        message.error('Yazı güncellenirken bir hata oluştu.');
       }
-    );
+    }
   };
-
   const beforeUpload = (file) => {
     if (!['image/jpeg', 'image/png'].includes(file.type)) {
       message.error(`${file.name} geçersiz resim dosyası.`, 2);
@@ -105,6 +132,12 @@ const AddPostForm = () => {
       onFinish={onFinish}
       layout="vertical"
       form={form}
+      initialValues={{
+        title: updatedPost.postName || '',
+        slug: updatedPost.postSlug || '',
+        detail: updatedPost.postDesc || '',
+        categoryID: updatedPost.postCategoryID || '',
+      }}
     >
       <Form.Item
         name="title"
@@ -194,7 +227,7 @@ const AddPostForm = () => {
         <TextArea
           placeholder="Yazı detayını giriniz.."
           showCount
-          autoSize={{ minRows: 15, maxRows: 50 }}
+          autoSize={{ minRows: 10, maxRows: 20 }}
         />
       </Form.Item>
       <Form.Item
@@ -203,12 +236,6 @@ const AddPostForm = () => {
         valuePropName="fileList"
         getValueFromEvent={normFile}
         extra="Yazınızda öne çıkan resmi yüklemek için tıklayınız."
-        rules={[
-          {
-            required: true,
-            message: 'Lütfen bir resim seçiniz.',
-          },
-        ]}
       >
         <Upload
           name="banner"
@@ -234,11 +261,11 @@ const AddPostForm = () => {
 
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={submitting}>
-          Yazı Ekle
+          Yazıyı Güncelle
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default AddPostForm;
+export default UpdatePostForm;
