@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, Skeleton, Space, Image, Modal } from 'antd';
-import { deleteDoc, doc, getDoc } from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  collection,
+} from 'firebase/firestore';
 
 import { useCategory } from '../../context/CategoryContext';
 import { db } from '../../firebase';
@@ -8,8 +16,21 @@ import UpdateCategoryForm from './UpdateCategoryForm';
 const CategoriesTable = () => {
   const { categories, setUpdatedCategory, isVisibleModal, setIsVisibleModal } =
     useCategory();
-  const deleteCategory = async (id) => {
+  const deleteCategory = async (id, category) => {
+    let posts = [];
     await deleteDoc(doc(db, 'categories', id));
+    const postQuery = query(
+      collection(db, 'posts'),
+      where('postCategoryID', '==', category.categoryId)
+    );
+    const querySnapshot = await getDocs(postQuery);
+    querySnapshot.forEach((doc) => {
+      posts.push({ firebaseID: doc.id });
+    });
+    console.log(posts);
+    posts.forEach(async (post) => {
+      await deleteDoc(doc(db, 'posts', post.firebaseID));
+    });
   };
   const handleUpdateCategory = async (id) => {
     const veri = await getDoc(doc(db, 'categories', id));
@@ -56,7 +77,7 @@ const CategoriesTable = () => {
       title: 'İşlemler',
       key: 'islemler',
       dataIndex: 'key',
-      render: (key) => (
+      render: (key, categoryId) => (
         <Space size="middle">
           <button
             className="text-green-700 font-semibold"
@@ -66,7 +87,7 @@ const CategoriesTable = () => {
           </button>
           <button
             className="text-red-500 font-semibold"
-            onClick={() => deleteCategory(key)}
+            onClick={() => deleteCategory(key, categoryId)}
           >
             Sil
           </button>

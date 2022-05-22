@@ -18,7 +18,6 @@ import { useCategory } from '../../context/CategoryContext';
 const { TextArea } = Input;
 const { Option } = Select;
 const UpdatePostForm = ({ updatedPost, setIsVisibleModal }) => {
-  console.log(updatedPost);
   const [uploadFile, setUploadFile] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);

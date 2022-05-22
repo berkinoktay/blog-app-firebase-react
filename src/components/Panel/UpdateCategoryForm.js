@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { updateDoc, doc } from 'firebase/firestore';
+import {
+  updateDoc,
+  doc,
+  where,
+  collection,
+  query,
+  getDocs,
+} from 'firebase/firestore';
 import { Form, Input, Button, message, Upload, Progress } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -19,8 +26,9 @@ const UpdateCategoryForm = ({ className }) => {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
+    let posts = [];
     setSubmitting(true);
-    if (Object.keys(uploadFile).length > 0) {
+    if (uploadFile !== null) {
       const imageRef = ref(
         storage,
         `categoriesBanner/${uploadFile.uid}-${Date.now()}`
@@ -52,9 +60,7 @@ const UpdateCategoryForm = ({ className }) => {
             })
             .then(async () => {
               setSubmitting(false);
-
               form.resetFields();
-
               message.success('Kategori başarılı bir şekilde eklendi.');
               setIsVisibleModal(false);
               setProgress(0);
@@ -85,6 +91,20 @@ const UpdateCategoryForm = ({ className }) => {
         message.error('Kategori eklenirken bir hata oluştu.');
       }
     }
+    const postQuery = query(
+      collection(db, 'posts'),
+      where('postCategoryID', '==', updatedCategory.categoryId)
+    );
+    const querySnapshot = await getDocs(postQuery);
+    querySnapshot.forEach((doc) => {
+      posts.push({ firebaseID: doc.id });
+    });
+    posts.forEach(async (post) => {
+      const data = {
+        postCategoryName: values.name,
+      };
+      await updateDoc(doc(db, 'posts', post.firebaseID), data);
+    });
   };
 
   const beforeUpload = (file) => {

@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Spin } from 'antd';
 
 import PostDetail from './pages/PostDetail';
 import Category from './pages/Category';
@@ -17,7 +18,13 @@ function App() {
   return (
     <CategoryProvider>
       <PostsProvider>
-        <Suspense fallback={<p> Loading...</p>}>
+        <Suspense
+          fallback={
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <Spin tip="Sayfa yükleniyor..." size="large" />
+            </div>
+          }
+        >
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path=":categorySlug" element={<Category />}></Route>
