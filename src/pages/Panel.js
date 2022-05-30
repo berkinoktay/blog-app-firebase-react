@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import 'antd/dist/antd.css';
 import { Layout, Menu, Breadcrumb } from 'antd';
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { DesktopOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 import Logo from '../assets/img/logo-white.png';
@@ -26,31 +22,27 @@ const Panel = ({ children, breadcrumb }) => {
   }
 
   const items = [
+    // getItem(
+    //   <Link to="/panel">Tüm Yazılar</Link>,
+    //   '/panel',
+    //   <PieChartOutlined />
+    // ),
     getItem(
-      <Link to="/panel">Tüm Yazılar</Link>,
+      <Link to="/panel">Yazı Yönetimi</Link>,
       '/panel',
-      <PieChartOutlined />
+      <DesktopOutlined />
     ),
     getItem(
       <Link to="/panel/yazi-ekle">Yazı Ekle</Link>,
       '/panel/yazi-ekle',
       <PieChartOutlined />
     ),
-    getItem(
-      <Link to="/panel/yazi-yonetimi">Yazı Yönetimi</Link>,
-      '/panel/yazi-yonetimi',
-      <DesktopOutlined />
-    ),
+
     getItem(
       <Link to="/panel/kategori-yonetimi">Kategori Yönetimi</Link>,
       '/panel/kategori-yonetimi',
       <DesktopOutlined />
     ),
-    getItem('Kategoriler', 'kategoriler', <UserOutlined />, [
-      getItem(<Link to="/panel/kategoriler/travel">Travel</Link>, '4'),
-      getItem('Business', '5'),
-      getItem('Alex', '6'),
-    ]),
   ];
   return (
     <Layout

@@ -1,6 +1,5 @@
 import React from 'react';
-import Banner from '../assets/img/banner.jpg';
-import { useParams } from 'react-router-dom';
+
 const CategoryBanner = ({ name, banner }) => {
   return (
     <div

@@ -6,6 +6,7 @@ const PostsContext = createContext();
 
 export const PostsProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   //   const [selectedCategory, setSelectedCategory] = useState({});
   //   const [isVisibleModal, setIsVisibleModal] = useState(false);
 
@@ -22,6 +23,7 @@ export const PostsProvider = ({ children }) => {
           ...doc.data(),
         }));
         setPosts(postSnap);
+        setLoading(false);
       });
     } catch (e) {
       console.error('Error getting documents: ', e);
@@ -31,6 +33,7 @@ export const PostsProvider = ({ children }) => {
   const values = {
     posts,
     setPosts,
+    loading,
   };
   return (
     <PostsContext.Provider value={values}>{children}</PostsContext.Provider>

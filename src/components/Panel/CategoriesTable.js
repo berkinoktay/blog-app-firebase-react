@@ -27,7 +27,6 @@ const CategoriesTable = () => {
     querySnapshot.forEach((doc) => {
       posts.push({ firebaseID: doc.id });
     });
-    console.log(posts);
     posts.forEach(async (post) => {
       await deleteDoc(doc(db, 'posts', post.firebaseID));
     });
@@ -105,16 +104,12 @@ const CategoriesTable = () => {
       categoryImage: category.categoryImage,
     };
   });
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
 
   return (
     <>
       <Table
         columns={columns}
         dataSource={data}
-        onChange={onChange}
         pagination={{ pageSize: 5 }}
         className="flex-1"
       />

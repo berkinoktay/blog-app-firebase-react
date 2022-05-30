@@ -19,15 +19,17 @@ const Header = () => {
           </Link>
         </div>
         <ul className="flex items-center uppercase tracking-widest text-sm mx-auto my-0">
-          {categories.map((item) => (
-            <Menu
-              key={item.categoryId}
-              name={item.categoryName}
-              slug={item.categorySlug}
-            />
-          ))}
+          {!!categories.length
+            ? categories.map((item) => (
+                <Menu
+                  key={item.categoryId}
+                  name={item.categoryName}
+                  slug={item.categorySlug}
+                />
+              ))
+            : 'KATEGORİ YOK.'}
         </ul>
-        <ul className="flex items-center">
+        <ul className="flex items-center m-0">
           <Socials icon={<FiFacebook />} />
           <Socials icon={<FiLinkedin />} />
           <Socials icon={<FiTwitter />} />

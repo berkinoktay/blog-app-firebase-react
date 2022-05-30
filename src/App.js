@@ -29,7 +29,7 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route path=":categorySlug" element={<Category />}></Route>
             <Route path=":categorySlug/:postSlug" element={<PostDetail />} />
-            <Route
+            {/* <Route
               exact
               path="panel"
               element={
@@ -37,7 +37,16 @@ function App() {
                   <AllPosts />
                 </Panel>
               }
-            ></Route>
+            ></Route> */}
+            <Route
+              exact
+              path="panel"
+              element={
+                <Panel breadcrumb="Yazı Yönetimi">
+                  <EditPost />
+                </Panel>
+              }
+            />
             <Route
               path="panel/yazi-ekle"
               element={
@@ -46,14 +55,7 @@ function App() {
                 </Panel>
               }
             />
-            <Route
-              path="panel/yazi-yonetimi"
-              element={
-                <Panel breadcrumb="Yazı Yönetimi">
-                  <EditPost />
-                </Panel>
-              }
-            />
+
             <Route
               path="panel/yazi-yonetimi"
               element={

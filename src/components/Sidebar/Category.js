@@ -17,10 +17,9 @@ const Category = () => {
           >
             <Link
               to={`/${item.categorySlug}`}
-              className="flex items-center justify-between text-gray-600 hover:text-red-500 transform transition-colors"
+              className="flex items-center text-gray-600 hover:text-red-500 transform transition-colors"
             >
-              <span>{item.categoryName}</span>{' '}
-              <span className="text-xs">(12)</span>
+              <span>{item.categoryName}</span>
             </Link>
           </li>
         ))}
