@@ -9,27 +9,47 @@ import {
   where,
   collection,
 } from 'firebase/firestore';
+import { ref, deleteObject } from 'firebase/storage';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { useCategory } from '../../context/CategoryContext';
-import { db } from '../../firebase';
+import { db, storage } from '../../firebase';
 import UpdateCategoryForm from './UpdateCategoryForm';
 const CategoriesTable = () => {
   const { categories, setUpdatedCategory, isVisibleModal, setIsVisibleModal } =
     useCategory();
+
   const deleteCategory = async (id, category) => {
     let posts = [];
-    await deleteDoc(doc(db, 'categories', id));
-    const postQuery = query(
-      collection(db, 'posts'),
-      where('postCategoryID', '==', category.categoryId)
+    const categoryImageDeferRef = ref(
+      storage,
+      `categoriesBanner/${category.categoryImageName}`
     );
-    const querySnapshot = await getDocs(postQuery);
-    querySnapshot.forEach((doc) => {
-      posts.push({ firebaseID: doc.id });
-    });
-    posts.forEach(async (post) => {
-      await deleteDoc(doc(db, 'posts', post.firebaseID));
-    });
+    deleteObject(categoryImageDeferRef)
+      .then(async () => {
+        const postQuery = query(
+          collection(db, 'posts'),
+          where('postCategoryID', '==', category.categoryId)
+        );
+        const querySnapshot = await getDocs(postQuery);
+        querySnapshot.forEach((doc) => {
+          posts.push({
+            firebaseID: doc.id,
+            imageName: doc.data().postImageName,
+          });
+        });
+        posts.forEach(async (post) => {
+          await deleteDoc(doc(db, 'posts', post.firebaseID));
+          const postImageDeferRef = ref(
+            storage,
+            `postsCoverImages/${post.imageName}`
+          );
+          deleteObject(postImageDeferRef);
+        });
+      })
+      .then(async () => {
+        await deleteDoc(doc(db, 'categories', id));
+      });
   };
   const handleUpdateCategory = async (id) => {
     const veri = await getDoc(doc(db, 'categories', id));
@@ -82,13 +102,13 @@ const CategoriesTable = () => {
             className="text-green-700 font-semibold"
             onClick={() => handleUpdateCategory(key)}
           >
-            Güncelle
+            <EditOutlined />
           </button>
           <button
             className="text-red-500 font-semibold"
             onClick={() => deleteCategory(key, categoryId)}
           >
-            Sil
+            <DeleteOutlined />
           </button>
         </Space>
       ),
@@ -102,6 +122,7 @@ const CategoriesTable = () => {
       slug: category.categorySlug,
       aciklama: category.categoryDesc === '' ? '-' : category.categoryDesc,
       categoryImage: category.categoryImage,
+      categoryImageName: category.categoryImageName,
     };
   });
 

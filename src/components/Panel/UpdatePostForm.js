@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, message, Upload, Progress, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 import {
   collection,
   query,
@@ -26,10 +31,12 @@ const UpdatePostForm = ({ updatedPost, setIsVisibleModal }) => {
   const { categories } = useCategory();
 
   const onFinish = async (values) => {
-    console.log(uploadFile);
-
     let categoryDetail = {};
     setSubmitting(true);
+    const postImageRef = ref(
+      storage,
+      `postsCoverImages/${updatedPost.postImageName}`
+    );
     const getCategoryDetails = query(
       collection(db, 'categories'),
       where('categoryId', '==', values.categoryID)
@@ -40,51 +47,50 @@ const UpdatePostForm = ({ updatedPost, setIsVisibleModal }) => {
     });
 
     if (Object.keys(uploadFile).length > 0) {
-      const imageRef = ref(
-        storage,
-        `postsCoverImages/${uploadFile.uid}-${Date.now()}`
-      );
-      const uploadImage = uploadBytesResumable(imageRef, uploadFile);
-      uploadImage.on(
-        'state_changed',
-        (snapshot) => {
-          const progressPercent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setProgress(progressPercent);
-        },
-        (err) => {
-          console.log(err);
-        },
-        async () => {
-          await getDownloadURL(uploadImage.snapshot.ref)
-            .then(async (url) => {
-              //   const categoryName = categoryDetail.categoryName;
-              const data = {
-                postName: values.title,
-                postSlug: values.slug,
-                postDesc: values.detail,
-                postImage: url,
-                postCategoryID: values.categoryID,
-                postCategoryName: categoryDetail.categoryName,
-              };
-              await updateDoc(doc(db, 'posts', updatedPost.firebaseID), data);
-            })
-            .then(() => {
-              setSubmitting(false);
-              form.resetFields();
-              setIsVisibleModal(false);
-              message.success('Yazı başarılı bir şekilde güncellendi.');
-              setProgress(0);
-            })
+      deleteObject(postImageRef).then(async () => {
+        const imageRef = ref(storage, `postsCoverImages/${uploadFile.uid}`);
+        const uploadImage = uploadBytesResumable(imageRef, uploadFile);
+        uploadImage.on(
+          'state_changed',
+          (snapshot) => {
+            const progressPercent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            setProgress(progressPercent);
+          },
+          (err) => {
+            console.log(err);
+          },
+          async () => {
+            await getDownloadURL(uploadImage.snapshot.ref)
+              .then(async (url) => {
+                //   const categoryName = categoryDetail.categoryName;
+                const data = {
+                  postName: values.title,
+                  postSlug: values.slug,
+                  postDesc: values.detail,
+                  postImage: url,
+                  postCategoryID: values.categoryID,
+                  postCategoryName: categoryDetail.categoryName,
+                };
+                await updateDoc(doc(db, 'posts', updatedPost.firebaseID), data);
+              })
+              .then(() => {
+                setSubmitting(false);
+                form.resetFields();
+                setIsVisibleModal(false);
+                message.success('Yazı başarılı bir şekilde güncellendi.');
+                setProgress(0);
+              })
 
-            .catch((err) => {
-              setSubmitting(false);
-              console.log(err);
-              message.error('Yazı güncellenirken bir hata oluştu.');
-            });
-        }
-      );
+              .catch((err) => {
+                setSubmitting(false);
+                console.log(err);
+                message.error('Yazı güncellenirken bir hata oluştu.');
+              });
+          }
+        );
+      });
     } else {
       try {
         const data = {

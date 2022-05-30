@@ -18,10 +18,8 @@ const AddCategoryForm = ({ className }) => {
 
   const onFinish = async (values) => {
     setSubmitting(true);
-    const imageRef = ref(
-      storage,
-      `categoriesBanner/${uploadFile.uid}-${Date.now()}`
-    );
+    const uniqueImageName = `${uploadFile.uid}`;
+    const imageRef = ref(storage, `categoriesBanner/${uniqueImageName}`);
     const uploadImage = uploadBytesResumable(imageRef, uploadFile);
     uploadImage.on(
       'state_changed',
@@ -44,6 +42,7 @@ const AddCategoryForm = ({ className }) => {
               categoryDesc: values.aciklama || '',
               timestamp: serverTimestamp(),
               categoryImage: url,
+              categoryImageName: uniqueImageName,
             });
           })
           .then(() => {

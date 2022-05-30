@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 import {
   updateDoc,
   doc,
@@ -29,49 +34,62 @@ const UpdateCategoryForm = ({ className }) => {
     let posts = [];
     setSubmitting(true);
     if (uploadFile !== null) {
-      const imageRef = ref(
+      const desertRef = ref(
         storage,
-        `categoriesBanner/${uploadFile.uid}-${Date.now()}`
+        `categoriesBanner/${updatedCategory.categoryImageName}`
       );
-      const uploadImage = uploadBytesResumable(imageRef, uploadFile);
-      uploadImage.on(
-        'state_changed',
-        (snapshot) => {
-          const progressPercent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setProgress(progressPercent);
-        },
-        (err) => {
-          console.log(err);
-        },
-        async () => {
-          await getDownloadURL(uploadImage.snapshot.ref)
-            .then(async (url) => {
-              const data = {
-                categoryName: values.name,
-                categorySlug: values.slug,
-                categoryDesc: values.aciklama || '',
-                categoryImage: url,
-                uid: uploadFile.uid,
-                uploadedFileName: uploadFile.name,
-              };
-              await updateDoc(doc(db, 'categories', updatedCategory.id), data);
-            })
-            .then(async () => {
-              setSubmitting(false);
-              form.resetFields();
-              message.success('Kategori başarılı bir şekilde eklendi.');
-              setIsVisibleModal(false);
-              setProgress(0);
-            })
-            .catch((err) => {
-              setSubmitting(false);
+
+      const imageRef = ref(storage, `categoriesBanner/${uploadFile.uid}`);
+      // Delete the file
+      deleteObject(desertRef)
+        .then(() => {
+          const uploadImage = uploadBytesResumable(imageRef, uploadFile);
+          uploadImage.on(
+            'state_changed',
+            (snapshot) => {
+              const progressPercent = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setProgress(progressPercent);
+            },
+            (err) => {
               console.log(err);
-              message.error('Kategori eklenirken bir hata oluştu.');
-            });
-        }
-      );
+            },
+            async () => {
+              await getDownloadURL(uploadImage.snapshot.ref)
+                .then(async (url) => {
+                  const data = {
+                    categoryName: values.name,
+                    categorySlug: values.slug,
+                    categoryDesc: values.aciklama || '',
+                    categoryImage: url,
+                    categoryImageName: uploadFile.uid,
+                    uid: uploadFile.uid,
+                    uploadedFileName: uploadFile.name,
+                  };
+                  await updateDoc(
+                    doc(db, 'categories', updatedCategory.id),
+                    data
+                  );
+                })
+                .then(async () => {
+                  setSubmitting(false);
+                  form.resetFields();
+                  message.success('Kategori başarılı bir şekilde eklendi.');
+                  setIsVisibleModal(false);
+                  setProgress(0);
+                })
+                .catch((err) => {
+                  setSubmitting(false);
+                  console.log(err);
+                  message.error('Kategori eklenirken bir hata oluştu.');
+                });
+            }
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       try {
         const data = {

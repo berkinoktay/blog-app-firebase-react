@@ -26,6 +26,7 @@ const AddPostForm = () => {
   const [form] = Form.useForm();
   const { categories } = useCategory();
   const onFinish = async (values) => {
+    const uniqueImageName = `${uploadFile.uid}`;
     let categoryDetail = {};
     setSubmitting(true);
     const getCategoryDetails = query(
@@ -36,10 +37,7 @@ const AddPostForm = () => {
     querySnapshot.forEach((doc) => {
       categoryDetail = { ...doc.data() };
     });
-    const imageRef = ref(
-      storage,
-      `postsCoverImages/${uploadFile.uid}-${Date.now()}`
-    );
+    const imageRef = ref(storage, `postsCoverImages/${uniqueImageName}`);
     const uploadImage = uploadBytesResumable(imageRef, uploadFile);
     uploadImage.on(
       'state_changed',
@@ -62,6 +60,7 @@ const AddPostForm = () => {
               postSlug: values.slug,
               postDesc: values.detail,
               postImage: url,
+              postImageName: uniqueImageName,
               postCreatedTime: serverTimestamp(),
               postCategoryID: values.categoryID,
               postCategoryName: categoryName,

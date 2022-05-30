@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import PostDetail from './pages/PostDetail';
 import Category from './pages/Category';
 import AddPost from './pages/AddPost';
-import AllPosts from './components/Panel/AllPosts';
+// import AllPosts from './components/Panel/AllPosts';
 import EditPost from './pages/EditPost';
 import EditCategory from './pages/EditCategory';
 import { CategoryProvider } from './context/CategoryContext';

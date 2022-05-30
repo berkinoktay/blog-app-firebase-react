@@ -1,11 +1,11 @@
 import React from 'react';
-import BlogPostGrid from './BlogPostGrid';
 import { RiArticleLine } from 'react-icons/ri';
-import BlogHeader from './BlogHeader';
-import { usePosts } from '../../context/PostContext';
 import { Skeleton } from 'antd';
 
-import NoData from '../NoData';
+import BlogPostGrid from './BlogPostGrid';
+import BlogHeader from './BlogHeader';
+import { usePosts } from '../../context/PostContext';
+
 const Main = () => {
   const { posts, loading } = usePosts();
   return (

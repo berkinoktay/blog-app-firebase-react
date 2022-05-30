@@ -14,30 +14,29 @@ const CategoryMain = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ posts: [], category: {} });
 
-  const getData = async () => {
-    let category = {};
-    let post = [];
-    const q1 = query(
-      collection(db, 'categories'),
-      where('categorySlug', '==', categorySlug)
-    );
-    const querySnapshot = await getDocs(q1);
-    querySnapshot.forEach((doc) => {
-      category = { ...doc.data() };
-    });
-    const q2 = query(
-      collection(db, 'posts'),
-      where('postCategoryID', '==', category.categoryId)
-    );
-    const querySnapshot2 = await getDocs(q2);
-    querySnapshot2.forEach((doc) => {
-      post.push(doc.data());
-    });
-    setData({ posts: post, category });
-    setLoading(false);
-  };
   useEffect(() => {
-    getData();
+    setTimeout(async () => {
+      let category = {};
+      let post = [];
+      const q1 = query(
+        collection(db, 'categories'),
+        where('categorySlug', '==', categorySlug)
+      );
+      const querySnapshot = await getDocs(q1);
+      querySnapshot.forEach((doc) => {
+        category = { ...doc.data() };
+      });
+      const q2 = query(
+        collection(db, 'posts'),
+        where('postCategoryID', '==', category.categoryId)
+      );
+      const querySnapshot2 = await getDocs(q2);
+      querySnapshot2.forEach((doc) => {
+        post.push(doc.data());
+      });
+      setData({ posts: post, category });
+      setLoading(false);
+    }, 100);
   }, [categorySlug]);
 
   return (
