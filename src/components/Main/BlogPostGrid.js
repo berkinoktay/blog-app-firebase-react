@@ -62,7 +62,7 @@ const BlogPostGrid = ({
         <div className="mt-auto">
           <a
             href={`/${slugify(postCategoryName)}/${postSlug}`}
-            className="uppercase text-xs font-semibold bg-red-500 hover:bg-red-400 text-white w-auto py-2 px-3 rounded transform transition-colors duration-300"
+            className="uppercase text-xs font-semibold bg-red-500 hover:bg-red-400 !text-white w-auto py-2 px-3 rounded transform transition-colors duration-300"
           >
             Devamını Oku
           </a>

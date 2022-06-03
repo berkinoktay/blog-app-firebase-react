@@ -27,7 +27,7 @@ const BlogPostHorizontal = ({
       </a>
 
       <div className="px-10">
-        <div className="capitalize text-sm text-red-500 mb-3 text-black">
+        <div className="capitalize text-sm text-red-500 mb-3">
           {postCategoryName}
         </div>
         <h4 className="text-xl font-medium">
@@ -61,7 +61,7 @@ const BlogPostHorizontal = ({
         <div>
           <a
             href={`/${categorySlug}/${postSlug}`}
-            className="uppercase text-xs font-semibold bg-red-500 hover:bg-red-400 text-white w-auto py-2 px-3 rounded transform transition-colors duration-300"
+            className="uppercase text-xs font-semibold bg-red-500 hover:bg-red-400 !text-white  w-auto py-2 px-3 rounded transform transition-colors duration-300"
           >
             Devamını Oku
           </a>
